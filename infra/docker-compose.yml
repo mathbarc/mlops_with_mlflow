@@ -1,0 +1,45 @@
+services:
+    minio:
+      image: minio/minio
+      environment:
+        - MINIO_CONSOLE_ADDRESS=:9001
+        - MINIO_ROOT_USER=tdc-mlops
+        - MINIO_ROOT_PASSWORD=tdc-mlops
+      ports:
+        - "9000:9000"
+        - "9001:9001"
+      command:
+        - server
+        - /data
+      volumes:
+        - minio-data:/data
+
+
+    postgres:
+      image: postgres
+      environment:
+        - POSTGRES_USER=tdc-mlops-db
+        - POSTGRES_PASSWORD=tdc-mlops-db
+        - POSTGRES_DB=mlflow-db
+        - PGDATA=/var/lib/postgresql/data/pgdata
+      ports:
+        - "5432:5432"
+      volumes:
+        - mlflow-db-data:/var/lib/postgresql/data/pgdata
+    
+    mlflow:
+      image: larribas/mlflow
+      environment:
+        - MLFLOW_S3_ENDPOINT_URL="http://minio:9000"
+        - AWS_ACCESS_KEY_ID=tdc-mlops
+        - AWS_SECRET_ACCESS_KEY=tdc-mlops
+        - MLFLOW_BACKEND_STORE_URI=postgresql://tdc-mlops-db:tdc-mlops-db@postgres:5432/mlflow-db
+        - MLFLOW_ARTIFACT_DESTINATION=s3://mlflow
+      command: ["-h", "0.0.0.0", "-p", "9002", "--backend-store-uri","postgresql://tdc-mlops-db:tdc-mlops-db@postgres:5432/mlflow-db", "--default-artifact-root","s3://mlflow"]
+      ports:
+        - "9002:9002"
+
+
+volumes:
+  minio-data: 
+  mlflow-db-data:
