@@ -3,19 +3,21 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 import torch
-import math
+
+from mlflow.models.signature import ModelSignature
+from mlflow.types.schema import Schema, TensorSpec
 
 class RiceClassifierV1(nn.Module):
 
-    def __init__(self, labels, conv_activation = F.leaky_relu):
+    def __init__(self, conv_activation = F.leaky_relu):
         super(RiceClassifierV1,self).__init__()
 
-        self.labels = labels
-        self.nClasses = len(labels)
+        self.nClasses = 5
 
         self.conv_activation = conv_activation
 
         self.resize = torchvision.transforms.Resize((64,64))
+        self.toTensor = torchvision.transforms.ToTensor()
 
 
         # 1 input image channel (grayscale), 10 output channels/feature maps
@@ -43,10 +45,10 @@ class RiceClassifierV1(nn.Module):
 
     ## TODO: define the feedforward behavior
     def forward(self, input):
+        if type(input) == numpy.ndarray:
+            input = self.toTensor(input)
         x = input
         x = self.resize(x)
-        if(torch.cuda.is_initialized()):
-            x = x.cuda()
         # one activated conv layer
         x = self.conv_activation(self.conv1(x))
         x = self.pool(x)
@@ -74,7 +76,18 @@ class RiceClassifierV1(nn.Module):
 
         # final output
         return x
-
-if __name__=="__main__":
-    classifier = RiceClassifierV1(["c1", "c2", "c3", "c4"])
-    print(classifier)
+    
+    def signature(self):
+        
+        input_schema = Schema(
+            [
+                TensorSpec(numpy.dtype(numpy.float32), (-1, 250, 250, 3),"image")
+            ]
+        )
+        output_schema = Schema(
+            [
+                TensorSpec(numpy.dtype(numpy.float32), (-1, self.nClasses), "probs")
+            ]
+            )
+        return ModelSignature(inputs=input_schema, outputs=output_schema)
+    

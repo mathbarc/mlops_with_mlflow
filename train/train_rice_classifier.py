@@ -11,7 +11,7 @@ import tqdm
 import mlflow
 
 
-def train(train_loader, test_loader, net, optimizer, criterion, n_epochs):
+def train(train_loader, test_loader, net, optimizer, criterion, n_epochs, labels_str):
 
     
     device_str = "cpu"
@@ -62,8 +62,8 @@ def train(train_loader, test_loader, net, optimizer, criterion, n_epochs):
         net.eval()
 
         
-        class_correct = numpy.zeros(len(model.labels))
-        class_total = numpy.zeros(len(model.labels))
+        class_correct = numpy.zeros(len(labels_str))
+        class_total = numpy.zeros(len(labels_str))
         test_loss = 0
 
         count = 0
@@ -101,27 +101,26 @@ def train(train_loader, test_loader, net, optimizer, criterion, n_epochs):
         measures["test_loss"] = test_loss
 
 
-        for i in range(len(model.labels)):
+        for i in range(len(labels_str)):
             if class_total[i] > 0:
-                measures[f"test_accuracy_{net.labels[i]}"] = class_correct[i] / class_total[i]
+                measures[f"test_accuracy_{labels_str[i]}"] = class_correct[i] / class_total[i]
         
         measures["test_accuracy_overall"] = numpy.sum(class_correct) / numpy.sum(class_total)
 
         mlflow.log_metrics(measures, epoch)
     
         if epoch % 10 == 0:
-            mlflow.pytorch.log_model(net, f"rice_classifier_{epoch}")
+            mlflow.pytorch.log_model(net, f"rice_classifier_{epoch}", signature=net.signature(), code_paths=["train/rice_classifier.py"])
         
-    mlflow.pytorch.log_model(net, "rice_classifier_final")
+    mlflow.pytorch.log_model(net, "rice_classifier_final", signature=net.signature(), code_paths=["train/rice_classifier.py"])
             
-                
 
-    
 
 if __name__=="__main__":
     import sys
     import dataset_loader
     import rice_classifier
+    
     from torch.utils.data import DataLoader
     import dotenv
     import os
@@ -150,9 +149,9 @@ if __name__=="__main__":
     trainData, testData = dataset_loader.ImageClassificationDataset(sys.argv[1], torchvision.transforms.ToTensor()).split()
     trainLoader = DataLoader(trainData, params["batch_size"], True)
     testLoader = DataLoader(testData, params["batch_size"], True)
-    model = rice_classifier.RiceClassifierV1(trainData.labels)
+    model = rice_classifier.RiceClassifierV1()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=params["lr"], momentum=params["momentum"])
 
-    train(trainLoader, testLoader, model,optimizer, criterion, 20)
+    train(trainLoader, testLoader, model,optimizer, criterion, 20, trainData.labels)

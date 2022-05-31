@@ -3,7 +3,6 @@ from torchvision.io import read_image
 from torch.utils.data import Dataset
 import cv2
 import random
-import torch
 
 class ImageClassificationDataset(Dataset):
     def __init__(self, img_source, transform=None, target_transform=None, labels=None):
