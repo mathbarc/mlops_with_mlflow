@@ -2,3 +2,5 @@ mlflow
 torch
 torchvision
 kaggle
+Flask
+python-dotenv
