@@ -149,7 +149,7 @@ if __name__=="__main__":
     trainData, testData = dataset_loader.ImageClassificationDataset(sys.argv[1], torchvision.transforms.ToTensor()).split()
     trainLoader = DataLoader(trainData, params["batch_size"], True)
     testLoader = DataLoader(testData, params["batch_size"], True)
-    model = rice_classifier.RiceClassifierV1()
+    model = rice_classifier.RiceClassifierV1(trainData.labels)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=params["lr"], momentum=params["momentum"])
