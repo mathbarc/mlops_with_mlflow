@@ -9,10 +9,11 @@ from mlflow.types.schema import Schema, TensorSpec
 
 class RiceClassifierV1(nn.Module):
 
-    def __init__(self, conv_activation = F.leaky_relu):
+    def __init__(self, labels, conv_activation = F.leaky_relu):
         super(RiceClassifierV1,self).__init__()
 
-        self.nClasses = 5
+        self.labels = labels
+        self.nClasses = len(self.labels)
 
         self.conv_activation = conv_activation
 
@@ -45,11 +46,7 @@ class RiceClassifierV1(nn.Module):
 
     ## TODO: define the feedforward behavior
     def forward(self, input):
-        if type(input) == numpy.ndarray:
-            input = self.toTensor(input)
-        x = input
-        x = self.resize(x)
-        # one activated conv layer
+        x = self.resize(input)
         x = self.conv_activation(self.conv1(x))
         x = self.pool(x)
         x = self.batch_norm1(x)
@@ -90,4 +87,25 @@ class RiceClassifierV1(nn.Module):
             ]
             )
         return ModelSignature(inputs=input_schema, outputs=output_schema)
+
+    def predict(self, image):
+        response = []
+        with torch.no_grad():
+            if type(image) == numpy.ndarray:
+                image = self.toTensor(image)
+            
+            size = image.size()
+            if len(size) == 3:
+                image = torch.reshape(image, (1,size[0], size[1], size[2]))
+            input = image
+            output = self.forward(input).numpy()
+            for o in output:
+                r = {}
+                label = numpy.argmax(o)
+                r["label"] = self.labels[label]
+                r["prob"] = float(o[label])
+                response.append(r)
+        return response
+
+        
     
