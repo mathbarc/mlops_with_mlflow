@@ -1,14 +1,14 @@
 # MLOps
 
-    O presente repositório contém o material da palestra sobre MLOps apresentada na TheDeveloper'sConference Innovation 2022.
+O presente repositório contém o material da palestra sobre MLOps apresentada na TheDeveloper'sConference Innovation 2022.
 
-	- O que é MLOps;
-	- Os diferentes componentes de um processo MLOps;
-	- Os níveis de maturidade dos processos:
-		- Manual;
-		- Com automação de pipeline de ML;
-		- Com automação CI/CD;
-	- E na sequência apresentarei uma pipeline construída utilizando a ferramenta MLFlow e uma api REST que consome modelos gerenciados pelo MLFlow.
+- O que é MLOps;
+- Os diferentes componentes de um processo MLOps;
+- Os níveis de maturidade dos processos:
+	- Manual;
+	- Com automação de pipeline de ML;
+	- Com automação CI/CD;
+- E na sequência apresentarei uma pipeline construída utilizando a ferramenta MLFlow e uma api REST que consome modelos gerenciados pelo MLFlow.
 
 ## O que é MLOps?
 
