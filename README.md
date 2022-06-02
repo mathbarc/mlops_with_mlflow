@@ -1,34 +1,36 @@
 # MLOps
 
-    O presente repositório contém o material da palestra sobre MLOps apresentada na TheDeveloper'sConference Innovation 2022.
+O presente repositório contém o material da palestra sobre MLOps apresentada na TheDeveloper'sConference Innovation 2022.
 
-	- O que é MLOps;
-	- Os diferentes componentes de um processo MLOps;
-	- Os níveis de maturidade dos processos:
-		- Manual;
-		- Com automação de pipeline de ML;
-		- Com automação CI/CD;
-	- E na sequência apresentarei uma pipeline construída utilizando a ferramenta MLFlow e uma api REST que consome modelos gerenciados pelo MLFlow.
+- O que é MLOps;
+- Os diferentes componentes de um processo MLOps;
+- Os níveis de maturidade dos processos:
+	- Manual;
+	- Com automação de pipeline de ML;
+	- Com automação CI/CD;
+- E na sequência apresentarei uma pipeline construída utilizando a ferramenta MLFlow e uma api REST que consome modelos gerenciados pelo MLFlow.
 
 ## O que é MLOps?
 
 MLOps é um conjunto de práticas que visa reduzir a distância entre o modelo de inteligência artificial e utilização deste modelo pelo usuário final.
 No MLOps os ciclos do DevOps são mantidos, porém são adicionadas as etapas necessárias para o desenvolvimento de modelos de machine learning:
-	- A captação e organização da base de dados, principal insumo para a criação de modelos;
-	- A seleção e treinamento de modelos compatíveis com os padrões que se deseja extrair do conjunto de dados;
-	- E a validação dos modelos com um conjunto de dados diferente do utilizado para treinar o modelo.
+
+- A captação e organização da base de dados, principal insumo para a criação de modelos;
+- A seleção e treinamento de modelos compatíveis com os padrões que se deseja extrair do conjunto de dados;
+- E a validação dos modelos com um conjunto de dados diferente do utilizado para treinar o modelo.
 
 Estas três etapas são incluídas no processo como uma extensão da etapa de desenvolvimento mas na maioria dos casos elas ocorrem em paralelo. Vale ressaltar porém que o tempo de conclusão necessário para as etapas de ML e DEV são diferentes, o que muitas vezes gera uma disparidade entre o código desenvolvido e os modelos em criação.
 
 ## Componentes de um processo MLOps
 
 Para reduzir essas disparidades no MLOps adotamos as seguintes fases de desenvolvimento:
-	- A análise exploratória dos dados: Nesta etapa os cientistas de dados analisam o dataset com o objetivo de compreender o problema e analisar a viabilidade da solução;
-	- Preparação dos dados: Neste ponto é realizada limpeza, organização e catalogação dos dados;
-	- Treinamento de modelos: Etapa na qual os dados limpos e catalogados são utilizados para criar modelos que reconheçam os padrões desejados, assim como é assegurado o seu funcionamento correto junto a plataforma;
-	- Quando o modelo está apto para uso, ele é disponibilizado em uma plataforma para processo de inferência utilizando dados novos vindos do ambiente de produção;
-	- E portando precisa de um acompanhamento para averiguar se ele mantém sua integridade, sendo necessário o monitoramento dos seus resultados, principalmente dos indices de confiança nos resultado do modelo;
-	- Dados com baixos índices de segurança no resultado são captados e destinados então para compor uma nova base de dados e o processo retorna para a etapa de treinamento.
+
+- A análise exploratória dos dados: Nesta etapa os cientistas de dados analisam o dataset com o objetivo de compreender o problema e analisar a viabilidade da solução;
+- Preparação dos dados: Neste ponto é realizada limpeza, organização e catalogação dos dados;
+- Treinamento de modelos: Etapa na qual os dados limpos e catalogados são utilizados para criar modelos que reconheçam os padrões desejados, assim como é assegurado o seu funcionamento correto junto a plataforma;
+- Quando o modelo está apto para uso, ele é disponibilizado em uma plataforma para processo de inferência utilizando dados novos vindos do ambiente de produção;
+- E portando precisa de um acompanhamento para averiguar se ele mantém sua integridade, sendo necessário o monitoramento dos seus resultados, principalmente dos indices de confiança nos resultado do modelo;
+- Dados com baixos índices de segurança no resultado são captados e destinados então para compor uma nova base de dados e o processo retorna para a etapa de treinamento.
 
 Dado todo este processo iterativo, o que devemos esperar de um pipeline de MLOps? Bem, isso depende da complexidade e escala do seu produto.
 
