@@ -18,6 +18,7 @@ def readb64(uri):
 @app.route("/classify", methods=["POST"])
 def classify():
     model = mlflow.pytorch.load_model(os.environ["MODEL_URI"])
+    
     imageBase64 = request.form.get("image")
     img = readb64(imageBase64)    
     return jsonify(model.predict(img))

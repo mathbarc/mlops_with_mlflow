@@ -4,3 +4,4 @@ torchvision
 kaggle
 Flask
 python-dotenv
+opencv-python
