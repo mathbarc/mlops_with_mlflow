@@ -11,11 +11,11 @@ import tqdm
 import mlflow
 
 
-def train(train_loader, test_loader, net, optimizer, criterion, n_epochs, labels_str):
+def train(train_loader, test_loader, net, optimizer, criterion, n_epochs, labels_str, use_cuda=False):
 
     
     device_str = "cpu"
-    if torch.cuda.is_available():
+    if torch.cuda.is_available() and use_cuda:
         device_str = "cuda"
     
 
@@ -71,6 +71,9 @@ def train(train_loader, test_loader, net, optimizer, criterion, n_epochs, labels
 
             # get the input images and their corresponding labels
             inputs, labels = data
+
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
             # forward pass to get outputs
             outputs = net(inputs)

@@ -90,6 +90,15 @@ class RiceClassifierV1(nn.Module):
 
     def predict(self, image):
         response = []
+
+        device_str = "cpu"
+        if torch.cuda.is_available():
+            device_str = "cuda"
+        
+
+        device = torch.device(device_str)
+        self = self.to(device)
+
         with torch.no_grad():
             if type(image) == numpy.ndarray:
                 image = self.toTensor(image)
@@ -97,8 +106,8 @@ class RiceClassifierV1(nn.Module):
             size = image.size()
             if len(size) == 3:
                 image = torch.reshape(image, (1,size[0], size[1], size[2]))
-            input = image
-            output = self.forward(input).numpy()
+            input = image.to(device)
+            output = self.forward(input).cpu().numpy()
             for o in output:
                 r = {}
                 label = numpy.argmax(o)
