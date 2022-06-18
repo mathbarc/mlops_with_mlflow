@@ -5,3 +5,4 @@ kaggle
 Flask
 python-dotenv
 opencv-python
+flask-cors
