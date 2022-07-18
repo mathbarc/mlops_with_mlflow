@@ -1,6 +1,4 @@
 
-from operator import mod
-from gpg import Data
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
@@ -139,9 +137,9 @@ if __name__=="__main__":
     mlflow.start_run(experiment_id=experiment_id)
 
     params = {
-            "lr":0.0001,
+            "lr":0.001,
             "momentum":0.8,
-            "batch_size":8,
+            "batch_size":14,
             "criterion":"cross_entropy",
             "optmizer":"sgd",
             "model":"rice_classifier_v1"
