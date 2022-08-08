@@ -1,56 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Clissify Rice</title>
-    <script>
-    function readFileB () {
-        // (A) GET SELECTED FILE
-        let selected = document.getElementById("demoPickB").files[0];
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="main.css">
 
-        // (B) READ SELECTED FILE
-        let reader = new FileReader();
-        reader.addEventListener("load", () => {
-            var data = new FormData();
-            data.append("image", reader.result);
+    <title>Classify Rice</title>
 
-            let imgTag = document.getElementById("demoShowB");
-            imgTag.src = reader.result;
-
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = false;
-
-            xhr.open("POST", "http://127.0.0.1:5000/classify");
-
-            xhr.onload = function() {
-                let resultTag = document.getElementById("result");
-                console.log(this.responseText)
-                result = JSON.parse(this.response)
-                resultTag.innerHTML = "<p>Label: "+result[0].label+"</p><p>Confidence: "+result[0].prob+"</p>";
-            };
-
-            xhr.send(data);
-
-        });
-        
-        reader.readAsDataURL(selected);
-
-      
-    }
-    </script>
   </head>
   <body>
+    <header>
+			<div class="caixa">
+				<h1><img src=""></h1>
+			</div>
+		</header>
+    <main>
+      <h1>Classify Rice</h1>
+
+      <p>To classify your rice please choose a image compatible with the A.I. and wait for the result.</p>
     
-    <div>
-      <input type="file" value="Choose Image File" id="demoPickB"
+      <div class="texto">
+       <input  type="file" value="Choose Image File" id="demoPickB"
             accept="image/*" onchange="readFileB()"/>
-    </div>
+      </div>
 
-    <div>
+      <div>
       <img id="demoShowB"/>
-    </div>
+      </div>
 
-    <div id="result">
-    </div>
-
+      <div id="result">
+     </div>
+    </main>
+    <script src="rice-mlops.js"></script>
   </body>
 </html>
