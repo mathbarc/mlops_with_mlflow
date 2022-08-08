@@ -1,2 +1,3 @@
 datasets/Rice_Image_Dataset/
 train/__pycache__/
+.vscode
