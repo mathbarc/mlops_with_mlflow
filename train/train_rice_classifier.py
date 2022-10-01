@@ -153,6 +153,7 @@ if __name__ == "__main__":
     mlflow.start_run(experiment_id=experiment_id)
 
     params = {
+
         "lr": 0.001,
         "momentum": 0.8,
         "batch_size": 14,
