@@ -7,19 +7,18 @@ import torch
 from mlflow.models.signature import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
 
-class RiceClassifierV1(nn.Module):
 
-    def __init__(self, labels, conv_activation = F.leaky_relu):
-        super(RiceClassifierV1,self).__init__()
+class RiceClassifierV1(nn.Module):
+    def __init__(self, labels, conv_activation=F.leaky_relu):
+        super(RiceClassifierV1, self).__init__()
 
         self.labels = labels
         self.nClasses = len(self.labels)
 
         self.conv_activation = conv_activation
 
-        self.resize = torchvision.transforms.Resize((64,64))
+        self.resize = torchvision.transforms.Resize((64, 64))
         self.toTensor = torchvision.transforms.ToTensor()
-
 
         # 1 input image channel (grayscale), 10 output channels/feature maps
         # 3x3 square convolution kernel
@@ -38,11 +37,10 @@ class RiceClassifierV1(nn.Module):
         self.batch_norm6 = nn.BatchNorm2d(256)
         self.conv7 = nn.Conv2d(256, 512, 3, padding="same")
         self.batch_norm7 = nn.BatchNorm2d(512)
-        
+
         self.dropout = nn.Dropout(p=0.3)
         self.dense = nn.Linear(512, self.nClasses)
         self.output = nn.Softmax(dim=1)
-
 
     ## TODO: define the feedforward behavior
     def forward(self, input):
@@ -73,19 +71,15 @@ class RiceClassifierV1(nn.Module):
 
         # final output
         return x
-    
+
     def signature(self):
-        
+
         input_schema = Schema(
-            [
-                TensorSpec(numpy.dtype(numpy.float32), (-1, 250, 250, 3),"image")
-            ]
+            [TensorSpec(numpy.dtype(numpy.float32), (-1, 250, 250, 3), "image")]
         )
         output_schema = Schema(
-            [
-                TensorSpec(numpy.dtype(numpy.float32), (-1, self.nClasses), "probs")
-            ]
-            )
+            [TensorSpec(numpy.dtype(numpy.float32), (-1, self.nClasses), "probs")]
+        )
         return ModelSignature(inputs=input_schema, outputs=output_schema)
 
     def predict(self, image):
@@ -94,7 +88,6 @@ class RiceClassifierV1(nn.Module):
         device_str = "cpu"
         if torch.cuda.is_available():
             device_str = "cuda"
-        
 
         device = torch.device(device_str)
         self = self.to(device)
@@ -102,10 +95,10 @@ class RiceClassifierV1(nn.Module):
         with torch.no_grad():
             if type(image) == numpy.ndarray:
                 image = self.toTensor(image)
-            
+
             size = image.size()
             if len(size) == 3:
-                image = torch.reshape(image, (1,size[0], size[1], size[2]))
+                image = torch.reshape(image, (1, size[0], size[1], size[2]))
             input = image.to(device)
             output = self.forward(input).cpu().numpy()
             for o in output:
@@ -115,6 +108,3 @@ class RiceClassifierV1(nn.Module):
                 r["prob"] = float(o[label])
                 response.append(r)
         return response
-
-        
-    

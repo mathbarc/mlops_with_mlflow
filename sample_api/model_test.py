@@ -2,7 +2,7 @@ import mlflow
 import dotenv
 import cv2
 
-if __name__=="__main__":
+if __name__ == "__main__":
     dotenv.load_dotenv(".env")
     model = mlflow.pytorch.load_model("models:/rice_classifier/Production")
     model.eval()
