@@ -6,7 +6,6 @@ import cv2
 from flask import Flask, request, jsonify
 import os
 import base64
-import io
 import numpy
 from flask_cors import CORS
 
