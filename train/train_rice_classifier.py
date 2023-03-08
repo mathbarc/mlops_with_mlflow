@@ -154,13 +154,23 @@ if __name__ == "__main__":
 
     params = {
 
-        "lr": 0.001,
+        "lr": 0.0001,
         "momentum": 0.8,
-        "batch_size": 14,
+        "batch_size": 12,
         "criterion": "cross_entropy",
         "optmizer": "sgd",
         "model": "rice_classifier_v1",
     }
+
+    # params = {
+
+    #     "lr": 0.001,
+    #     "momentum": 0.8,
+    #     "batch_size": 14,
+    #     "criterion": "cross_entropy",
+    #     "optmizer": "sgd",
+    #     "model": "rice_classifier_v1",
+    # }
 
     mlflow.log_params(params)
 

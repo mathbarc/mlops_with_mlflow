@@ -1,6 +1,6 @@
 # MLOps
 
-O presente repositório contém o material da palestra sobre MLOps apresentada na TheDeveloper'sConference Innovation 2022.
+O presente repositório apresenta conceitos sobre MLOps, e contém uma demonstração de como utilizar ferramentas disponíveis para criar uma pipeline simples de treinamento e entrega.
 
 - O que é MLOps;
 - Os diferentes componentes de um processo MLOps;
