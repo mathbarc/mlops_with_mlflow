@@ -1,0 +1,3 @@
+[submodule "mlops-env/cvat"]
+	path = mlops-env/cvat
+	url = https://github.com/opencv/cvat.git

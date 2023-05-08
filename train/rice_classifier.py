@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 import torch
+import uuid
 
 from mlflow.models.signature import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
@@ -14,6 +15,8 @@ class RiceClassifierV1(nn.Module):
 
         self.labels = labels
         self.nClasses = len(self.labels)
+
+        self.id = str(uuid.uuid4())
 
         self.conv_activation = conv_activation
 
@@ -106,5 +109,6 @@ class RiceClassifierV1(nn.Module):
                 label = numpy.argmax(o)
                 r["label"] = self.labels[label]
                 r["prob"] = float(o[label])
+                r["model_id"]=self.id
                 response.append(r)
         return response

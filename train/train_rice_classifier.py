@@ -6,18 +6,36 @@ import numpy
 import tqdm
 
 import mlflow
-
+import os
+import dotenv
+dotenv.load_dotenv(".env")
 
 def train(
     train_loader,
     test_loader,
     net,
-    optimizer,
-    criterion,
-    n_epochs,
+    params,
     labels_str,
     use_cuda=False,
 ):
+
+
+    mlflow.set_tracking_uri(os.environ["MLFLOW_ENDPOINT"])
+    experiment = mlflow.get_experiment_by_name("Rice Classifier")
+    if experiment is None:
+        experiment_id = mlflow.create_experiment("Rice Classifier")
+    else:
+        experiment_id = experiment.experiment_id
+    mlflow.start_run(experiment_id=experiment_id)
+
+    params["model_id"] = net.id
+
+    mlflow.log_params(params)
+
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(
+        net.parameters(), lr=params["lr"], momentum=params["momentum"]
+    )
 
     device_str = "cpu"
     if torch.cuda.is_available() and use_cuda:
@@ -26,7 +44,7 @@ def train(
     device = torch.device(device_str)
     net = net.to(device)
 
-    for epoch in tqdm.tqdm(range(n_epochs)):  # loop over the dataset multiple times
+    for epoch in tqdm.tqdm(range(params['epochs'])):  # loop over the dataset multiple times
 
         measures = {}
 
@@ -139,18 +157,9 @@ if __name__ == "__main__":
     import rice_classifier
 
     from torch.utils.data import DataLoader
-    import dotenv
+    
     import os
 
-    dotenv.load_dotenv(".env")
-
-    mlflow.set_tracking_uri(os.environ["MLFLOW_ENDPOINT"])
-    experiment = mlflow.get_experiment_by_name("Rice Classifier")
-    if experiment is None:
-        experiment_id = mlflow.create_experiment("Rice Classifier")
-    else:
-        experiment_id = experiment.experiment_id
-    mlflow.start_run(experiment_id=experiment_id)
 
     params = {
 
@@ -160,30 +169,29 @@ if __name__ == "__main__":
         "criterion": "cross_entropy",
         "optmizer": "sgd",
         "model": "rice_classifier_v1",
+        "epochs": 20
     }
 
     # params = {
 
     #     "lr": 0.001,
     #     "momentum": 0.8,
-    #     "batch_size": 14,
+    #     "batch_size": 20,
     #     "criterion": "cross_entropy",
     #     "optmizer": "sgd",
     #     "model": "rice_classifier_v1",
+    #     "epochs": 30
     # }
 
-    mlflow.log_params(params)
+    labels = ["Arborio", "Basmati", "Ipsala", "Jasmine", "Karacadag"]
 
     trainData, testData = dataset_loader.ImageClassificationDataset(
         sys.argv[1], torchvision.transforms.ToTensor()
     ).split()
     trainLoader = DataLoader(trainData, params["batch_size"], True)
     testLoader = DataLoader(testData, params["batch_size"], True)
-    model = rice_classifier.RiceClassifierV1(trainData.labels)
+    
+    
+    model = rice_classifier.RiceClassifierV1(labels)
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(
-        model.parameters(), lr=params["lr"], momentum=params["momentum"]
-    )
-
-    train(trainLoader, testLoader, model, optimizer, criterion, 20, trainData.labels)
+    train(trainLoader, testLoader, model, params, 20, labels)

@@ -21,7 +21,7 @@ function readFileB () {
             let resultTag = document.getElementById("result");
             console.log(this.responseText)
             result = JSON.parse(this.response)
-            resultTag.innerHTML = "<p>Label: "+result[0].label+"</p><p>Confidence: "+result[0].prob+"</p>";
+            resultTag.innerHTML = "<p>Label: "+result[0].label+"</p><p>Confidence: "+result[0].prob+"</p><p>Model: "+result[0].model_id+"</p>";
         };
 
         xhr.send(data);
