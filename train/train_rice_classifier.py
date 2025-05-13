@@ -8,7 +8,9 @@ import tqdm
 import mlflow
 import os
 import dotenv
+
 dotenv.load_dotenv(".env")
+
 
 def train(
     train_loader,
@@ -18,8 +20,6 @@ def train(
     labels_str,
     use_cuda=False,
 ):
-
-
     mlflow.set_tracking_uri(os.environ["MLFLOW_ENDPOINT"])
     experiment = mlflow.get_experiment_by_name("Rice Classifier")
     if experiment is None:
@@ -44,8 +44,9 @@ def train(
     device = torch.device(device_str)
     net = net.to(device)
 
-    for epoch in tqdm.tqdm(range(params['epochs'])):  # loop over the dataset multiple times
-
+    for epoch in tqdm.tqdm(
+        range(params["epochs"])
+    ):  # loop over the dataset multiple times
         measures = {}
 
         net.train(True)
@@ -88,7 +89,6 @@ def train(
 
         count = 0
         for data in test_loader:
-
             # get the input images and their corresponding labels
             inputs, labels = data
 
@@ -157,19 +157,17 @@ if __name__ == "__main__":
     import rice_classifier
 
     from torch.utils.data import DataLoader
-    
+
     import os
 
-
     params = {
-
         "lr": 0.0001,
         "momentum": 0.8,
         "batch_size": 12,
         "criterion": "cross_entropy",
         "optmizer": "sgd",
         "model": "rice_classifier_v1",
-        "epochs": 20
+        "epochs": 20,
     }
 
     # params = {
@@ -190,8 +188,7 @@ if __name__ == "__main__":
     ).split()
     trainLoader = DataLoader(trainData, params["batch_size"], True)
     testLoader = DataLoader(testData, params["batch_size"], True)
-    
-    
+
     model = rice_classifier.RiceClassifierV1(labels)
 
-    train(trainLoader, testLoader, model, params, 20, labels)
+    train(trainLoader, testLoader, model, params, labels)
