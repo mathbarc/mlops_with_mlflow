@@ -27,8 +27,5 @@ function readFileB () {
         xhr.send(data);
 
     });
-    
     reader.readAsDataURL(selected);
-
-  
 }
