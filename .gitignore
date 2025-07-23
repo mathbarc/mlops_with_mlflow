@@ -1,5 +1,6 @@
 **/Rice_Image_Dataset/
-train/__pycache__/
+**/__pycache__/
+.venv
 .vscode
 DR_USB_N10_NANO_1007/UT_USB_N10_NANO_1007/UT_USB_N10_NANO_1007/DATA/Thumbs.db
 datasets/train.zip
