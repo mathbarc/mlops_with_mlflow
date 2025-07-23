@@ -9,7 +9,8 @@ import mlflow
 import os
 import dotenv
 
-dotenv.load_dotenv(".env")
+if os.path.exists(".env"):
+    dotenv.load_dotenv(".env")
 
 
 def train(
@@ -20,12 +21,16 @@ def train(
     labels_str,
     use_cuda=False,
 ):
+
+    print(f"{os.environ['MLFLOW_ENDPOINT']}")
     mlflow.set_tracking_uri(os.environ["MLFLOW_ENDPOINT"])
     experiment = mlflow.get_experiment_by_name("Rice Classifier")
     if experiment is None:
         experiment_id = mlflow.create_experiment("Rice Classifier")
+        print(f"created experiment {experiment_id}")
     else:
         experiment_id = experiment.experiment_id
+        print(f"found {experiment_id}")
     mlflow.start_run(experiment_id=experiment_id)
 
     params["model_id"] = net.id
@@ -140,14 +145,14 @@ def train(
                 net,
                 f"rice_classifier_{epoch}",
                 signature=net.signature(),
-                code_paths=["train/rice_classifier.py"],
+                extra_files=["rice_classifier.py"],
             )
 
     mlflow.pytorch.log_model(
         net,
         "rice_classifier_final",
         signature=net.signature(),
-        code_paths=["train/rice_classifier.py"],
+        extra_files=["rice_classifier.py"],
     )
 
 

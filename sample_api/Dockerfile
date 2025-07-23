@@ -1,10 +1,10 @@
-FROM python:3.8.2-slim
+FROM python:3.11.13-bookworm
 
-RUN pip install python-dotenv numpy torch opencv-python Flask mlflow[extras] flask-cors
-RUN apt-get update
-RUN apt-get install libopencv-dev -y
+
+RUN pip install python-dotenv numpy torch opencv-python Flask mlflow[extras]==2.19.0 flask-cors torchvision
+RUN apt-get update -y; apt-get install libopencv-dev -y
 
 WORKDIR /home/
 COPY rice_classify_api.py app.py
-COPY .env .env
+COPY rice_classifier.py rice_classifier.py
 ENTRYPOINT [ "python3", "app.py" ]

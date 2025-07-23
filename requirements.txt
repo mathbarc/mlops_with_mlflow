@@ -1,8 +1,8 @@
-mlflow
+mlflow==2.19.0
 torch
 torchvision
 kaggle
 Flask
 python-dotenv
-opencv-python
+opencv-python-headless
 flask-cors

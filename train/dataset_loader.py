@@ -72,11 +72,11 @@ class ImageClassificationDataset(Dataset):
 
 
 if __name__ == "__main__":
-    dataset = ImageClassificationDataset("./datasets/Rice_Image_Dataset")
+    dataset = ImageClassificationDataset("./Rice_Image_Dataset")
 
     train, test = dataset.split()
     img, label = test[-1]
-
+    print(train.labels)
     print(len(train))
     print(len(test))
     print(len(dataset))

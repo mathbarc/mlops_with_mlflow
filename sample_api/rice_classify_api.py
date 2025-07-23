@@ -25,6 +25,7 @@ def readb64(uri):
 def classify():
     model_uri = os.environ["MODEL_URI"]
     app.logger.info(f"Retrieving model {model_uri}")
+    mlflow.set_tracking_uri(os.environ["MLFLOW_ENDPOINT"])
     model = mlflow.pytorch.load_model(model_uri)
     app.logger.info("Decoding image")
     imageBase64 = request.form.get("image")
@@ -40,5 +41,6 @@ def classify():
 
 
 if __name__ == "__main__":
-    dotenv.load_dotenv(".env")
+    if os.path.exists(".env"):
+        dotenv.load_dotenv(".env")
     app.run(host="0.0.0.0", port="5000")

@@ -1,17 +1,13 @@
-FROM python:3.8.2-slim
+FROM python:3.11.13-bookworm
 
-RUN pip install python-dotenv
-RUN pip install numpy
-RUN pip install torch
-RUN pip install torchvision
-RUN pip install mlflow[extras]
-RUN pip install cvat-sdk
-
+RUN pip install python-dotenv numpy torch torchvision mlflow[extras]==2.19.0 kaggle opencv-python-headless
+RUN apt update -y; apt install libopencv-dev -y
 
 WORKDIR /home
 
 COPY rice_classifier.py rice_classifier.py
+COPY dataset_loader.py dataset_loader.py
 COPY train_rice_classifier.py train_rice_classifier.py
-COPY train_with_cvat_dataset.py train_with_cvat_dataset.py
+COPY train.sh train.sh
 
-ENTRYPOINT [ "python", "train_with_cvat_dataset.py" ]
+CMD [ "bash", "train.sh" ]
