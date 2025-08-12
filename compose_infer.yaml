@@ -1,0 +1,29 @@
+services:
+  sample_api:
+    container_name: sample_api
+    build: ./sample_api
+    image: mlops-demo/sample_api
+    ports:
+      - 9003:5000
+    environment:
+      - MODEL_URI=models:/rice_classifier/1
+      - MLFLOW_ENDPOINT=http://mlflow:9002
+      - MLFLOW_TRACKING_URI=http://mlflow:9002
+    depends_on:
+      - mlflow
+    networks:
+      - mlops
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend/
+      args:
+        API_ENDPOINT: 'http:\/\/localhost:9003'
+    image: mlops-demo/frontend
+    ports:
+      - 9004:80
+    depends_on:
+      - mlflow
+    networks:
+      - mlops

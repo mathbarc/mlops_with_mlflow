@@ -1,0 +1,4 @@
+include:
+  - ./compose_env.yaml
+  - ./compose_train.yaml
+  - ./compose_infer.yaml

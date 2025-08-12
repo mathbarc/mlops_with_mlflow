@@ -1,0 +1,13 @@
+services:
+  train_model:
+    container_name: train_model
+    build: ./train
+    image: mlops-demo/train
+    environment:
+      - MLFLOW_ENDPOINT=http://mlflow:9002
+      - KAGGLE_USERNAME=${KAGGLE_USERNAME}
+      - KAGGLE_KEY=${KAGGLE_KEY}
+    depends_on:
+      - mlflow
+    networks:
+      - mlops

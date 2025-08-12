@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   minio:
     container_name: minio
@@ -16,6 +14,8 @@ services:
       - /data
     volumes:
       - minio-data:/data
+    networks:
+      - mlops
 
   createbuckets:
     container_name: createbuckets
@@ -31,6 +31,8 @@ services:
       /usr/bin/mc policy set list myminio/mlops;
       exit 0;
       "
+    networks:
+      - mlops
 
   postgres:
     container_name: mlflow-db
@@ -44,6 +46,8 @@ services:
       - "5432:5432"
     volumes:
       - mlflow-db-data:/var/lib/postgresql/data
+    networks:
+      - mlops
 
   mlflow:
     container_name: mlflow
@@ -66,42 +70,13 @@ services:
       - minio
       - createbuckets
       - postgres
+    networks:
+      - mlops
 
-  train_model:
-    container_name: train_model
-    build: ./train
-    image: mlops-demo/train
-    environment:
-      - MLFLOW_ENDPOINT=http://mlflow:9002
-      - KAGGLE_USERNAME=${KAGGLE_USERNAME}
-      - KAGGLE_KEY=${KAGGLE_KEY}
-    depends_on:
-      - mlflow
-
-  sample_api:
-    container_name: sample_api
-    build: ./sample_api
-    image: mlops-demo/sample_api
-    ports:
-      - 9003:5000
-    environment:
-      - MODEL_URI=models:/rice_classifier/1
-      - MLFLOW_ENDPOINT=http://mlflow:9002
-      - MLFLOW_TRACKING_URI=http://mlflow:9002
-    depends_on:
-      - mlflow
-
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend/
-      args:
-        API_ENDPOINT: 'http:\/\/localhost:9003'
-    image: mlops-demo/frontend
-    ports:
-      - 9004:80
-    depends_on:
-      - mlflow
 volumes:
   minio-data:
   mlflow-db-data:
+
+networks:
+  mlops:
+    name: mlops
